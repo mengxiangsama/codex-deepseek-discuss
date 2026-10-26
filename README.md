@@ -2,7 +2,7 @@
 
 让 GPT 和 DeepSeek 在 **Codex 的同一个会话** 中讨论问题。
 
-Codex 调用本项目提供的 `ask_deepseek` MCP 工具获得第二意见，再由当前 GPT 模型回应、质疑或综合。GPT 沿用你的 Codex 登录和模型设置；本项目只调用 DeepSeek API，无需额外 OpenAI API Key。
+Codex 调用本项目提供的 `ask_deepseek` MCP 工具，让 GPT 与 DeepSeek 分别提出观点，再交换具体方案、逐项回应分歧，并明确确认最终共识。仅需第二意见时，也支持一次独立审查。GPT 沿用你的 Codex 登录和模型设置；本项目只调用 DeepSeek API，无需额外 OpenAI API Key。
 
 Bring DeepSeek second opinions into a Codex conversation through a local MCP server. GPT stays in Codex; DeepSeek is called through its official API. Includes provider-reported model metadata, macOS Keychain support, and offline tests. Independent community project, not affiliated with OpenAI or DeepSeek.
 
@@ -13,7 +13,11 @@ Bring DeepSeek second opinions into a Codex conversation through a local MCP ser
                     ↑                    │
                     └── 第二意见和模型标识 ┘
                     ↓
-          同一条回复：DeepSeek 的观点 + GPT 的回应 / 综合
+          交换GPT具体方案与双方分歧，逐项同意 / 反驳 / 修改
+                    ↓
+          有重要反对意见就补证据继续讨论，确认同一最终版本
+                    ↓
+          展示双方观点、分歧与回应、共识或未解决事项
 ```
 
 这是 MCP 工具集成，不会更改 Codex 内置模型，也不会自动截取全部聊天历史。是否调用、传递什么上下文、讨论几轮，由 Codex 根据用户指令决定。
@@ -111,15 +115,17 @@ Codex 的接入约定参见 [官方 MCP 文档](https://learn.chatgpt.com/docs/e
 
 安装后向 Codex 发送：
 
-> 请先调用 ask_deepseek，让 DeepSeek 独立分析如何设计订单模块，再由 GPT 指出分歧并综合建议。最后分成“DeepSeek 的观点”和“GPT 的回应 / 综合”。只发送必要上下文，不发送凭据或无关聊天信息。
+> 请让 GPT 和 DeepSeek 分别分析订单模块，再把 GPT 的具体方案与双方分歧发给 DeepSeek，要求逐项同意、反驳或修改。有一方不认可就补证据继续讨论；双方确认同一最终版本后，再给我共识和实际争议过程。只发送必要上下文，不发送凭据或无关聊天信息。
 
 想让本次会话默认采用双模型讨论，可复制 [讨论指令](examples/discussion-instructions.md)。工具不会自动将指令写入你的全局 AGENTS.md，也不保证宿主在每次回复中自动调用。
 
-需要第二轮质疑时，让 Codex 把第一轮的必要观点放入新 `prompt`。本服务无会话存储，每次调用彼此独立。用户说“只要 GPT”时无需调用工具。
+采用讨论模式时，独立审查后必须将 GPT 的具体选择、DeepSeek 原观点和双方分歧放入新 `prompt`，要求逐项回应。对重要反对意见继续补证据或修订方案，再确认最终版本；不能把单次独立审查称为双方讨论，也不能把 GPT 单方面改写的版本称为双方共识。缺业务规则、证据不足或调用失败时如实保留分歧。
+
+本服务无会话存储，每次调用彼此独立，因此每轮都需显式传入必要上下文。完整讨论流程由下方 Skill 或讨论指令约束，MCP 服务本身不会自动循环调用。用户明确只需第二意见时可只做独立审查；说“只要 GPT”时无需调用工具。
 
 ## 可复用 Skill：GPT + DeepSeek 项目协作
 
-仓库附带 [gpt-deepseek-collab](skills/gpt-deepseek-collab/SKILL.md)，用于在业务项目中复用“先读代码 → DeepSeek 独立审查 → 讨论分歧 → 综合方案”的流程；只有用户要求实现时才修改代码和验证。已有的实现授权会延续，不会反复要求确认。
+仓库附带 [gpt-deepseek-collab](skills/gpt-deepseek-collab/SKILL.md)，用于在业务项目中复用“先读代码 → 分别提出观点 → 交换具体方案 → 逐项讨论分歧 → 确认同一最终版本”的流程；只有用户要求实现时才修改代码和验证。已有的实现授权会延续，不会反复要求确认。
 
 先完成上面的 MCP 安装和注册，再在仓库目录安装 Skill。macOS / Linux：
 

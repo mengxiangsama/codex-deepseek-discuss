@@ -1,4 +1,4 @@
 interface:
   display_name: "GPT + DeepSeek 协作"
-  short_description: "先读项目代码，让双模型独立审查并讨论分歧，按授权实现与验证"
-  default_prompt: "使用 $gpt-deepseek-collab 阅读相关代码，让 DeepSeek 独立审查，与 GPT 讨论分歧后给出综合方案；只有我要求实现时才修改代码。"
+  short_description: "先读代码、分别提出观点，再交换方案逐项讨论分歧并确认双方共识"
+  default_prompt: "使用 $gpt-deepseek-collab 阅读相关代码，让 GPT 与 DeepSeek 分别提出观点，交换具体方案逐项回应；任一方不认可就继续分析，双方确认最终版本后给出共识；只有我要求实现时才修改代码。"
