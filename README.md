@@ -149,17 +149,19 @@ Skill 会要求最小必要上下文和脱敏；工具不可用或调用失败�
 
 默认请求 `deepseek-flash`。`models` 命令查询账号可用模型；实际名称和可用性以服务端为准。
 
+代码开发默认推荐 `deepseek-flash`。截至 2026-10-26，官方 [API 模型说明](https://api-docs.deepseek.com/quick_start/pricing/) 将它映射到 **DeepSeek-V4.1-Flash-1017**；[V4.1-Flash 官方模型卡](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash) 的同设置编程基准优于其表中 V4-Pro，[1017 更新](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017) 又报告了进一步改进。这个推荐不等于对具体 Java 项目完成了 A/B 实测，也不代表每类任务都更强。模型映射可能变化，需要升级时请重新核对。
+
 可以在工具参数里指定：
 
 ```json
 {
   "prompt": "请审查订单超时关闭与支付回调同时发生时的一致性设计。",
-  "model": "deepseek-v4-pro",
+  "model": "deepseek-flash",
   "timeout": 180
 }
 ```
 
-也可以设置 `DEEPSEEK_MODEL`，例如配置示例中的 `deepseek-v4-pro`。优先级为：调用参数 → 环境变量 → `deepseek-flash`。重启 MCP 服务后环境变量更改才会生效。
+也可以设置 `DEEPSEEK_MODEL`，例如配置示例中的 `deepseek-flash`。用户需要比较 Pro 时，可显式传入 `deepseek-v4-pro`。优先级为：调用参数 → 环境变量 → `deepseek-flash`。重启 MCP 服务后环境变量更改才会生效。
 
 工具返回结构示例（以下是示意，非实际调用记录）：
 

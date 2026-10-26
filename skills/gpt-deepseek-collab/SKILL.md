@@ -15,6 +15,15 @@ description: 在用户明确要求 GPT 与 DeepSeek 协作、双模型讨论或 
 - 从实际可用工具中查找 `ask_deepseek`；名称可能带服务前缀，例如 `mcp__deepseek_discuss__ask_deepseek`。以当前工具声明为准，不硬编码某个宿主的调用方式或旧的 backend 参数。
 - 工具缺失时明确报告“DeepSeek 未参与：工具不可用”，给出 GPT 自己的分析；必要时指出需接入 deepseek-discuss MCP。不要擅自修改全局配置，也不要用模拟回答代替调用。
 
+## 代码开发时的模型选择
+
+- 用户未指定模型时，代码开发、修复、重构和代码审查优先显式请求 `model="deepseek-flash"`；这是本 Skill 的默认偏好，用户明确指定其他模型时遵从。不要仅凭 Pro 名称推断编程能力更强。
+- 截至 2026-10-26，官方 API 文档将 `deepseek-flash` 映射到 DeepSeek-V4.1-Flash-1017。选型依据是官方模型卡的编程/软件工程基准及更新说明，不代表已在用户的 Java 项目上完成 A/B 实测；版本映射会变化。用户再次询问最新模型或要求升级时重新核对官方文档。
+- 依据：[API 模型映射](https://api-docs.deepseek.com/quick_start/pricing/)、[V4.1-Flash 官方比较表](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash)、[1017 更新模型卡](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017)。不同基准版本、推理强度和 agent 框架的分数不能直接混比。
+- 若当前工具声明支持 `backend` 且需要通过 API 精确选择模型，使用 `backend="api"`；新版 API-only 工具没有此参数时省略。不要假定旧 Harness 接入会采用 `model` 参数。
+- 用调用结果中的 `requested_model` 和 `response_model` 核对请求与服务端标识。响应仅含别名时，不把它说成服务端证明了具体权重版本；只有文本回答时，说明缺少可验证元数据。
+- 模型别名不可用或调用失败时如实报告，不静默切换模型或提高推理预算；保留用户的显式配置，不擅自提高输出上限或推理强度。
+
 ## 先取证，再给独立审查上下文
 
 先阅读项目适用的 AGENTS.md 和与问题有关的真实代码、测试、调用链、配置结构。记录关键路径或行号，区分代码事实、业务假设和未知信息；没有项目代码或无法访问时明确限制，不能声称已读。
