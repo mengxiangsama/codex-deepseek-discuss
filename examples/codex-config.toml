@@ -1,0 +1,14 @@
+# Merge this table into your existing Codex configuration.
+# Replace the command with the absolute executable path on your machine.
+[mcp_servers.deepseek-discuss]
+command = "/absolute/path/to/codex-deepseek-discuss/.venv/bin/codex-deepseek"
+tool_timeout_sec = 240
+env_vars = ["DEEPSEEK_API_KEY"]
+
+[mcp_servers.deepseek-discuss.env]
+DEEPSEEK_MODEL = "deepseek-flash"
+
+# Windows example command (TOML literal string):
+# command = 'C:\path\to\codex-deepseek-discuss\.venv\Scripts\codex-deepseek.exe'
+# macOS can use setup-key instead of an inherited API key.
+# Never add a real API key to a committed TOML file.
