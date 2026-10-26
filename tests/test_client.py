@@ -111,6 +111,8 @@ class ClientTests(unittest.IsolatedAsyncioTestCase):
     async def test_keychain_read(self):
         os.environ.pop("DEEPSEEK_API_KEY")
         with patch("codex_deepseek.client.sys.platform", "darwin"), patch(
+            "codex_deepseek.client.getpass.getuser", return_value="test-user"
+        ), patch(
             "codex_deepseek.client.subprocess.run"
         ) as run:
             run.return_value.returncode = 0
