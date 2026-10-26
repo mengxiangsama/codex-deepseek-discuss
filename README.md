@@ -117,6 +117,34 @@ Codex 的接入约定参见 [官方 MCP 文档](https://learn.chatgpt.com/docs/e
 
 需要第二轮质疑时，让 Codex 把第一轮的必要观点放入新 `prompt`。本服务无会话存储，每次调用彼此独立。用户说“只要 GPT”时无需调用工具。
 
+## 可复用 Skill：GPT + DeepSeek 项目协作
+
+仓库附带 [gpt-deepseek-collab](skills/gpt-deepseek-collab/SKILL.md)，用于在业务项目中复用“先读代码 → DeepSeek 独立审查 → 讨论分歧 → 综合方案”的流程；只有用户要求实现时才修改代码和验证。已有的实现授权会延续，不会反复要求确认。
+
+先完成上面的 MCP 安装和注册，再在仓库目录安装 Skill。macOS / Linux：
+
+```bash
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+cp -R skills/gpt-deepseek-collab "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+如果同名 Skill 已存在，先检查内容再决定是否更新。Windows 用户可将 `skills/gpt-deepseek-collab` 文件夹复制到自己的 Codex skills 目录。重开会话让客户端发现 Skill；Skill 不会替你安装 MCP 或配置密钥。
+
+在业务项目的 Codex 会话里调用：
+
+```text
+用 $gpt-deepseek-collab 检查订单支付回调与超时关闭，
+先读相关代码，让 DeepSeek 独立审查，讨论后给我方案，暂不修改。
+```
+
+或者明确要求实现：
+
+```text
+用 $gpt-deepseek-collab 按确认的规则修复重复扣库存，并运行相关测试。
+```
+
+Skill 会要求最小必要上下文和脱敏；工具不可用或调用失败时如实报告，不编造双模型协作结果。
+
 ## 模型选择与识别
 
 默认请求 `deepseek-flash`。`models` 命令查询账号可用模型；实际名称和可用性以服务端为准。
