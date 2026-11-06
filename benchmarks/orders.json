@@ -1,0 +1,21 @@
+{
+  "task": "根据明确的业务规则，审查订单支付回调与超时关闭的事件序列，输出每个案例的最终状态、库存和退款次数。只输出以 case ID 为键的 JSON，每项包含 status、stock、refunds。",
+  "rules": [
+    "每个案例是独立的新订单，初始 status=pending，库存初始为 10，创建订单已预占 1 件，因此事件开始前 stock=9，refunds=0。",
+    "严格按列出的顺序原子处理事件，不推断真实并发顺序。",
+    "同一事件 id 全局去重，重复出现时整个事件不产生任何效果。",
+    "timeout 只将 pending 改成 closed 并归还 1 件库存；paid 或 closed 上的 timeout 无效果。",
+    "payment 将 pending 改成 paid；paid 上的新 payment 无效果；closed 上每个不同 id 的 payment 必须退款一次，不改变状态或库存。",
+    "事件已经鉴权且金额正确，不考虑其他事件或隐含业务规则。"
+  ],
+  "cases": [
+    {"id":"no_events","events":[]},
+    {"id":"pay_first","events":[{"kind":"payment","id":"p1"},{"kind":"timeout","id":"t1"}]},
+    {"id":"close_first","events":[{"kind":"timeout","id":"t1"},{"kind":"payment","id":"p1"}]},
+    {"id":"duplicate_timeout","events":[{"kind":"timeout","id":"t1"},{"kind":"timeout","id":"t1"},{"kind":"timeout","id":"t2"}]},
+    {"id":"duplicate_refund","events":[{"kind":"timeout","id":"t1"},{"kind":"payment","id":"p1"},{"kind":"payment","id":"p1"}]},
+    {"id":"separate_refunds","events":[{"kind":"timeout","id":"t1"},{"kind":"payment","id":"p1"},{"kind":"payment","id":"p2"}]},
+    {"id":"duplicate_payment","events":[{"kind":"payment","id":"p1"},{"kind":"payment","id":"p1"},{"kind":"payment","id":"p2"}]},
+    {"id":"global_dedup","events":[{"kind":"payment","id":"shared"},{"kind":"timeout","id":"shared"}]}
+  ]
+}

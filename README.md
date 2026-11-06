@@ -187,6 +187,12 @@ Skill 会要求最小必要上下文和脱敏；工具不可用或调用失败�
 
 接口约定参见 [DeepSeek Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion/)。
 
+## 单模型 / 双模型任务对比
+
+新增 [可复现评测与执行说明](benchmarks/README.md)：以支付回调、超时关闭和幂等为任务，记录准确率、整轮耗时和费用。提供 8 个固定案例、离线评分器和证据哈希；不会自动调用付费 API。
+
+**当前尚无真实模型 A/B 结果。** 本次运行环境未配置可用的 DeepSeek API 凭证和付费运行授权，本次只验证了离线框架，模型耗时和费用均未测，不声称双模型优于单模型。详见 [离线检查记录](benchmarks/results/offline-check.json)。
+
 ## 错误与限制
 
 - **401 / 认证失败**：检查服务进程实际读取的 Key；不要在 Key 前加 `$` 或混入空格。泄露过的 Key 应在控制台作废并重建。

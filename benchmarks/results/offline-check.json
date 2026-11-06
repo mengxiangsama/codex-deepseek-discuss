@@ -1,0 +1,26 @@
+{
+  "kind": "offline_check",
+  "performed_at": "2026-11-06T06:54:32.317943+00:00",
+  "base_commit": "791812b38c4d023bbc92fcaedecca70cd3c405e1",
+  "python": "3.12.14",
+  "suite_sha256": "2e971e1649abfc69bff7a6ab428107158129914740ab22d1b5baebd47762e62d",
+  "unit_tests": {
+    "count": 20,
+    "passed": 20,
+    "command": "python -m unittest discover -s tests -v"
+  },
+  "cli_smoke_check": {
+    "passed": true,
+    "elapsed_seconds": 0.159334,
+    "note": "Reference answers used to check start/finish/report only. Temporary fake arm records deleted; no model run."
+  },
+  "single_model_result": null,
+  "dual_model_result": null,
+  "model_elapsed_seconds": null,
+  "model_cost_usd": null,
+  "paid_api_calls": 0,
+  "limitations": [
+    "No live model comparison performed.",
+    "Offline check runtime is not model latency."
+  ]
+}
